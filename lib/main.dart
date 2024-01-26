@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:prvacik/providers/game_model.dart';
+import 'package:prvacik/providers/game_provider.dart';
+import 'package:prvacik/providers/questions_provider.dart';
+import 'package:prvacik/providers/user_provider.dart';
+import 'package:prvacik/views/game_view.dart';
 import 'package:prvacik/widgets/question_abc.dart';
 
+/*
 void main() {
   runApp(ChangeNotifierProvider(
-    create: (context) => GameModel(),
+    create: (context) => GameProvider(),
     child: const MyApp(),
   ));
 }
+*/
 
+void main() {
+  runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider<QuestionsProvider>(create: (_) => QuestionsProvider()),
+      ChangeNotifierProvider<GameProvider>(create: (_) => GameProvider()),
+      //Provider<UserProvider>(create: (_) => UserProvider()),
+    ],
+    child: const MyApp(),
+  )
+  );
+}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -69,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
+   return Scaffold(
       appBar: AppBar(
         flexibleSpace: GestureDetector(
             onTap: (){
@@ -85,13 +102,16 @@ class _MyHomePageState extends State<MyHomePage> {
       body: const Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: QuestionAbc(),
+        child: Text('Toto je úvodná stránka.'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
-            Provider.of<GameModel>(context, listen: false).addPoint(1),
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const GameView()),
+            ),
+        tooltip: 'Let\'s go',
+        child: const Icon(Icons.skip_next),
       ),
     );
   }

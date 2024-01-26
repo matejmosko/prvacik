@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prvacik/providers/question_model.dart';
+import 'package:provider/provider.dart';
+import 'package:prvacik/models/question.dart';
+import 'package:prvacik/providers/questions_provider.dart';
 import 'dart:math';
 
 String generateRandomString(int len) {
@@ -9,10 +11,15 @@ String generateRandomString(int len) {
 }
 
 class QuestionAbc extends StatelessWidget {
-  const QuestionAbc({super.key});
+  const QuestionAbc(this.id, {super.key});
+final int id;
+
 
   @override
   Widget build(BuildContext context) {
+    final questionsProvider = Provider.of<QuestionsProvider>(context);
+
+    Question question = questionsProvider.getQuestion(id);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -21,22 +28,22 @@ class QuestionAbc extends StatelessWidget {
         Flexible(
           child: Center(
             child: Image.network(
-              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg',
+question.image,
             ),
           ),
         ),
         Flexible(
           child: Center(
-            child: const Text("Čo je na obrázku?"),
+            child: Text(question.text),
           ),
         ),
         Flexible(
           child: Wrap(
-            children: List.generate(10, (index) {
+            children: List.generate(question.questions.length, (index) {
               return TextButton(
                 onPressed: () {},
                 child: Text(
-                  generateRandomString(12),
+                  question.questions[index],
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
               );
